@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.AccessDeniedException;
+
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
@@ -23,13 +25,14 @@ public class UsuarioController {
 
     @PutMapping("/atualizar")
     public ResponseEntity<UsuarioResponseDTO> atualizarUsuario(@PathVariable Long usuario_id, @RequestBody
-                                                               UsuarioRequestDTO usuarioRequestDTO){
+                                                               UsuarioRequestDTO usuarioRequestDTO)
+                                                                throws AccessDeniedException {
         return ResponseEntity
                 .ok()
                 .body(usuarioService.atualizarUsuario(usuario_id, usuarioRequestDTO));
     }
 
-
+    
 
 
 }

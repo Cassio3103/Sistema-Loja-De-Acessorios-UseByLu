@@ -24,4 +24,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatResponse);
     }
+
+    @ExceptionHandler(NoChangeException.class)
+        private ResponseEntity<RestErrorMessage> noChanceException(NoChangeException exception){
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.NOT_FOUND,
+                exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatResponse);
+    }
+
 }

@@ -2,17 +2,22 @@ package com.usebylu.service;
 
 import com.usebylu.dto.UsuarioRequestDTO;
 import com.usebylu.dto.UsuarioResponseDTO;
+import com.usebylu.exception.NoChangeException;
+import com.usebylu.exception.RestErrorMessage;
 import com.usebylu.exception.UsuarioDuplicadoException;
 import com.usebylu.model.Usuario;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import com.usebylu.repository.UsuarioRepository;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -56,15 +61,49 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
         );
     }
 
-    public UsuarioResponseDTO atualizarUsuario(Long id, UsuarioRequestDTO dto){
+
+    public UsuarioResponseDTO atualizarUsuario(Long id, UsuarioRequestDTO dto) throws AccessDeniedException {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontradp!"));
         Usuario usuarioLogado = getUsuarioLogado();
+        if(!Objects.equals(usuarioLogado.getUsuario_id(), usuario.getUsuario_id()))
+            throw new AccessDeniedException("Acesso não autorizado!");
 
-        //return
+        usuarioMudou(usuario, dto);
+
+        if(!Objects.equals(dto.getEmailUsuario(), usuario.getEmailUsuario())){
+            if(usuarioRepository.existsByemailUsuario(dto.getEmailUsuario())){
+                throw new RuntimeException("Email já usado!");
+            }
+        }
+
+        usuario.setNomeUsuario(dto.getNomeUsuario());
+        usuario.setSenha(dto.getSenha());
+        usuario.setEmailUsuario(dto.getEmailUsuario());
+
+        usuarioRepository.save(usuario);
+
+        return new UsuarioResponseDTO(
+                usuario.getUsuario_id(),
+                usuario.getNomeUsuario(),
+                usuario.getEmailUsuario(),
+                usuario.getDataIngresso()
+        );
     }
 
     // MÉTODOS AUXILIARES -------------------------------------------------------------/
+
+    public void usuarioMudou(Usuario usuario, UsuarioRequestDTO usuarioRequestDTO){
+        boolean naoMudou =
+                usuario.getNomeUsuario().equals(usuarioRequestDTO.getNomeUsuario())
+                        &&
+                        usuario.getSenha().equals(usuarioRequestDTO.getSenha())
+                        &&
+                        usuario.getEmailUsuario().equals(usuarioRequestDTO.getEmailUsuario());
+        if(naoMudou){
+            throw new NoChangeException("Não há mudanças para se atualizar!");
+        }
+    }
 
     public void verificarSeExisteUsuarioPorEmail(UsuarioRequestDTO dto){
         if(usuarioRepository.existsByemailUsuario(dto.getEmailUsuario())) {
