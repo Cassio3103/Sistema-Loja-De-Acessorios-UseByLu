@@ -23,6 +23,8 @@ public class UsuarioController {
                 .body(usuarioService.cadastrarUsuario(usuarioRequestDTO));
     }
 
+    // FAZER ROTA PARA LOGIN
+
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<UsuarioResponseDTO> atualizarUsuario(@PathVariable Long usuario_id, @RequestBody
                                                                UsuarioRequestDTO usuarioRequestDTO)
@@ -50,7 +52,8 @@ public class UsuarioController {
     }
 
     @GetMapping("/ativar/{id}")
-    public ResponseEntity<Void> ativarUsuario(@PathVariable Long usuario_id){
+    public ResponseEntity<Void> ativarUsuario(@PathVariable Long usuario_id)
+                                                                throws AccessDeniedException {
         usuarioService.ativarUsuario(usuario_id);
         return ResponseEntity
                 .noContent()

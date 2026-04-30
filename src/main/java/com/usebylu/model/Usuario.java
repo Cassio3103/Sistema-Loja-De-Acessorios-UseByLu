@@ -2,6 +2,8 @@ package com.usebylu.model;
 
 import com.usebylu.auxiliar.Endereco;
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.jspecify.annotations.Nullable;
@@ -12,56 +14,59 @@ import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
+@Data
 @Entity
 @Table(name = "usuario")
 public class Usuario extends EntidadeBasica implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long usuario_id;
-    private String nomeUsuario;
+    private Long id;
+    private String nome;
     private String senha;
     @Column(nullable = false, unique = true)
-    private int cpfUsuario;
-    private int telefoneUsuario;
-    private String emailUsuario;
+    private String cpf;
+    private long telefone;
+    private String email;
     @Embedded
-    private Endereco enderecoUsuario;
+    private Endereco endereco;
     private LocalDate dataIngresso;
 
     public Usuario(){}
 
-    public Usuario(Long usuario_id, String nomeUsuario, String senha, int cpfUsuario,
-                   int telefoneUsuario, String emailUsuario, Endereco enderecoUsuario, LocalDate dataIngresso){
-        this.usuario_id = usuario_id;
+    public Usuario(Long id, String nome, String senha, String cpf,
+                   long telefone, String email, Endereco endereco, LocalDate dataIngresso){
+        this.id = id;
         this.senha = senha;
-        this.telefoneUsuario = telefoneUsuario;
-        this.emailUsuario = emailUsuario;
-        this.enderecoUsuario = enderecoUsuario;
+        this.telefone = telefone;
+        this.email = email;
+        this.endereco = endereco;
         this.dataIngresso = dataIngresso;
     }
 
-    public void setCpfUsuario(int cpfUsuario) {
-        if(cpfUsuario != 11){
-            throw new IllegalArgumentException("O cpf não pode ser nulo!");
+    public void setCpf(String cpf) {
+        if(cpf.length() != 11){
+            throw new IllegalArgumentException("O CPF está inválido!");
         }
-        this.cpfUsuario = cpfUsuario;
+
+        this.cpf = cpf;
     }
 
-    public void setEmailUsuario(String emailUsuario){
-        if(emailUsuario == null || emailUsuario.equals(" ")){
+    public void setEmail(String email){
+        if(email == null || email.equals(" ")){
             throw new IllegalArgumentException("O email não pode ser nulo");
         }
-        this.emailUsuario = emailUsuario;
+        this.email = email;
     }
 
-    public void setNomeUsuario(String nomeUsuario){
-        if(nomeUsuario == null || nomeUsuario.equals(" ")){
+    public void setNome(String nome){
+        if(nome == null || nome.equals(" ")){
             throw new IllegalArgumentException("O nome não pode ser nulo");
         }
-        this.nomeUsuario = nomeUsuario;
+        this.nome = nome;
     }
 
     public void setSenha(String senha){

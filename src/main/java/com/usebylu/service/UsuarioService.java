@@ -26,37 +26,36 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
 
     // INJEÇÃO DE DEPENDÊNCIAS -------------------------------------------------------------/
 
-    private Usuario usuario;
     private UsuarioRepository usuarioRepository;
 
-    public UsuarioService(Usuario usuario, UsuarioRepository usuarioRepository){
+    public UsuarioService(UsuarioRepository usuarioRepository){
         super(usuarioRepository);
-        this.usuario = usuario;
+        this.usuarioRepository = usuarioRepository;
     }
 
     // CREATE, READ, UPDATE, DELETE -------------------------------------------------------------/
 
     public UsuarioResponseDTO cadastrarUsuario(UsuarioRequestDTO dto){
 
-        verificarSeExisteUsuarioPorEmail(dto);
+        verificarSeExistePorEmail(dto);
         verificarDataDeIngresso(dto);
 
         Usuario usuario = new Usuario();
 
-        usuario.setNomeUsuario(dto.getNomeUsuario());
+        usuario.setNome(dto.getNome());
         usuario.setSenha(dto.getSenha());
-        usuario.setCpfUsuario(dto.getCpfUsuario());
-        usuario.setTelefoneUsuario(dto.getTelefoneUsuario());
-        usuario.setEmailUsuario(dto.getEmailUsuario());
-        usuario.setEnderecoUsuario(dto.getEnderecoUsuario());
+        usuario.setCpf(dto.getCpf());
+        usuario.setTelefone(dto.getTelefone());
+        usuario.setEmail(dto.getEmail());
+        usuario.setEndereco(dto.getEndereco());
         usuario.setDataIngresso(dto.getDataDeIngresso());
 
         usuario = usuarioRepository.save(usuario);
 
         return new UsuarioResponseDTO(
-                usuario.getUsuario_id(),
-                usuario.getNomeUsuario(),
-                usuario.getEmailUsuario(),
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
                 usuario.getDataIngresso()
         );
     }
@@ -65,27 +64,27 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontradp!"));
         Usuario usuarioLogado = getUsuarioLogado();
-        if(!Objects.equals(usuarioLogado.getUsuario_id(), usuario.getUsuario_id()))
+        if(!Objects.equals(usuarioLogado.getId(), usuario.getId()))
             throw new AccessDeniedException("Acesso não autorizado!");
 
         usuarioMudou(usuario, dto);
 
-        if(!Objects.equals(dto.getEmailUsuario(), usuario.getEmailUsuario())){
-            if(usuarioRepository.existsByemailUsuario(dto.getEmailUsuario())){
+        if(!Objects.equals(dto.getEmail(), usuario.getEmail())){
+            if(usuarioRepository.existsByEmail(dto.getEmail())){
                 throw new RuntimeException("Email já usado!");
             }
         }
 
-        usuario.setNomeUsuario(dto.getNomeUsuario());
+        usuario.setNome(dto.getNome());
         usuario.setSenha(dto.getSenha());
-        usuario.setEmailUsuario(dto.getEmailUsuario());
+        usuario.setEmail(dto.getEmail());
 
         usuarioRepository.save(usuario);
 
         return new UsuarioResponseDTO(
-                usuario.getUsuario_id(),
-                usuario.getNomeUsuario(),
-                usuario.getEmailUsuario(),
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
                 usuario.getDataIngresso()
         );
     }
@@ -96,14 +95,14 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado!"));
 
         Usuario usuarioLogado = getUsuarioLogado();
-        if(!Objects.equals(usuarioLogado.getUsuario_id(), usuario.getUsuario_id())){
+        if(!Objects.equals(usuarioLogado.getId(), usuario.getId())){
             throw new AccessDeniedException("Acesso não autorizado! O ID digitado não é o seu!");
         }
 
         return new UsuarioResponseDTO(
-                usuario.getUsuario_id(),
-                usuario.getNomeUsuario(),
-                usuario.getEmailUsuario(),
+                usuario.getId(),
+                usuario.getNome(),
+                usuario.getEmail(),
                 usuario.getDataIngresso()
         );
     }
@@ -113,7 +112,7 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
                 .orElseThrow(()-> new UsuarioNaoEncontradoException("Usuário não encontrado!"));
 
         Usuario usuarioLogado = getUsuarioLogado();
-        if(!(usuarioLogado.getUsuario_id().equals(usuario.getUsuario_id()))){
+        if(!(usuarioLogado.getId().equals(usuario.getId()))){
             throw new AccessDeniedException("Acesso não autorizado! A conta que você está tentando deletar não é sua!");
         }
 
@@ -134,7 +133,7 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
 
     @Override
     public UserDetails loadUserByUsername(@NonNull String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByemailUsuario(username)
+        Usuario usuario = usuarioRepository.findByEmail(username)
                 .orElseThrow(()-> new UsernameNotFoundException("Usuário Não encontrado!"));
 
         return usuario;
@@ -144,18 +143,18 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
 
     public void usuarioMudou(@NonNull Usuario usuario, @NonNull UsuarioRequestDTO usuarioRequestDTO){
         boolean naoMudou =
-                usuario.getNomeUsuario().equals(usuarioRequestDTO.getNomeUsuario())
+                usuario.getNome().equals(usuarioRequestDTO.getNome())
                         &&
                         usuario.getSenha().equals(usuarioRequestDTO.getSenha())
                         &&
-                        usuario.getEmailUsuario().equals(usuarioRequestDTO.getEmailUsuario());
+                        usuario.getEmail().equals(usuarioRequestDTO.getEmail());
         if(naoMudou){
             throw new NoChangeException("Não há mudanças para se atualizar!");
         }
     }
 
-    public void verificarSeExisteUsuarioPorEmail(@NonNull UsuarioRequestDTO dto){
-        if(usuarioRepository.existsByemailUsuario(dto.getEmailUsuario())) {
+    public void verificarSeExistePorEmail(@NonNull UsuarioRequestDTO dto){
+        if(usuarioRepository.existsByEmail(dto.getEmail())) {
             throw new UsuarioDuplicadoException("Usuário já cadastrado no sistema!");
         }
     }
@@ -171,7 +170,9 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
     public void reativarUsuarioPorId(Long usuario_id) throws AccessDeniedException {
         Usuario usuarioLogado = getUsuarioLogado();
 
-        if(!(usuarioLogado.getUsuario_id().equals(usuario.getUsuario_id()))){
+        Usuario usuario = new Usuario();
+
+        if(!(usuarioLogado.getId().equals(usuario.getId()))){
             throw new AccessDeniedException("Acesso não autorizado! A conta que você está tentando deletar não é sua!");
         }
 

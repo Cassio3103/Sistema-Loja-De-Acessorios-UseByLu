@@ -28,7 +28,7 @@ public abstract class UsuarioLogadoService {
         }
 
 
-        return usuarioRepository.findByemailUsuario(auth.getName())
+        return usuarioRepository.findByEmail(auth.getName())
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado!"));
     }
 

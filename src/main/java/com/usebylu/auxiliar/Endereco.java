@@ -15,6 +15,8 @@ public class Endereco {
     private int numeroCasa;
     private Estado estado;
 
+    public Endereco(){}
+
     public Endereco(String cidade, String bairro, String rua, int numeroCasa, Estado estado){
         this.cidade = cidade;
         this.bairro = bairro;

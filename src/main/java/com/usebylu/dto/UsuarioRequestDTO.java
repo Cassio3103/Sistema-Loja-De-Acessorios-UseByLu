@@ -10,22 +10,24 @@ import java.time.LocalDate;
 @Setter
 public class UsuarioRequestDTO {
 
-    private String nomeUsuario;
+    private String nome;
     private String senha;
-    private int cpfUsuario;
-    private int telefoneUsuario;
-    private String emailUsuario;
-    private Endereco enderecoUsuario;
+    private String cpf;
+    private long telefone;
+    private String email;
+    private Endereco endereco;
     private LocalDate dataDeIngresso;
 
-    public UsuarioRequestDTO(String nomeUsuario, String senha, int cpfUsuario, int telefoneUsuario, String emailUsuario,
-                             Endereco enderecoUsuario, LocalDate dataDeIngresso){
-        this.nomeUsuario = nomeUsuario;
+    public UsuarioRequestDTO(){}
+
+    public UsuarioRequestDTO(String nome, String senha, String cpf, long telefone, String email,
+                             Endereco endereco, LocalDate dataDeIngresso){
+        this.nome = nome;
         this.senha = senha;
-        this.cpfUsuario = cpfUsuario;
-        this.telefoneUsuario = telefoneUsuario;
-        this.emailUsuario = emailUsuario;
-        this.enderecoUsuario = enderecoUsuario;
+        this.cpf = cpf;
+        this.telefone = telefone;
+        this.email = email;
+        this.endereco = endereco;
         this.dataDeIngresso = dataDeIngresso;
     }
 
