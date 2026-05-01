@@ -1,5 +1,6 @@
 package com.usebylu.controller;
 
+import com.usebylu.dto.LoginRequestDTO;
 import com.usebylu.dto.UsuarioResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -11,7 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class LoginController {
 
-    //@PostMapping("/login")
-    //public ResponseEntity<UsuarioResponseDTO> logarUsuario(@RequestBody)
+    @PostMapping("/login")
+    public ResponseEntity<UsuarioResponseDTO> logarUsuario(@RequestBody LoginRequestDTO loginRequestDTO){
+        return ResponseEntity
+                .ok()
+                .body(authService.login(loginRequestDTO));
+    }
 
 }

@@ -18,6 +18,9 @@ public class Produto {
     private Categoria categoria;
     private int estoque;
     private double precoProduto;
+    private boolean ativo;
+
+    public Produto(){};
 
     public Produto(Long produtoId, String nomeProduto, Categoria categoria, int estoque, double precoProduto){
         this.produtoId = produtoId;
