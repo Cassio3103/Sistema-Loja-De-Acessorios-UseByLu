@@ -1,6 +1,7 @@
 package com.usebylu.exception;
 
 import com.usebylu.model.Usuario;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -31,6 +32,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 exception.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(threatResponse);
+    }
+
+    @ExceptionHandler(EstadoInvalidoException.class)
+        private ResponseEntity<RestErrorMessage> estadoInvalidoException(EstadoInvalidoException exception){
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.BAD_REQUEST,
+                exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
     }
 
 }

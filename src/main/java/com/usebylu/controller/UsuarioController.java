@@ -2,6 +2,7 @@ package com.usebylu.controller;
 
 import com.usebylu.dto.UsuarioRequestDTO;
 import com.usebylu.dto.UsuarioResponseDTO;
+import com.usebylu.model.Usuario;
 import com.usebylu.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,6 @@ public class UsuarioController {
                 .ok()
                 .body(usuarioService.cadastrarUsuario(usuarioRequestDTO));
     }
-
-    // FAZER ROTA PARA LOGIN
 
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<UsuarioResponseDTO> atualizarUsuario(@PathVariable Long usuario_id, @RequestBody

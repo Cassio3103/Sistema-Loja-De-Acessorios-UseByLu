@@ -1,6 +1,8 @@
 package com.usebylu.auxiliar;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +15,7 @@ public class Endereco {
     private String bairro;
     private String rua;
     private int numeroCasa;
+    @Enumerated(EnumType.STRING)
     private Estado estado;
 
     public Endereco(){}
