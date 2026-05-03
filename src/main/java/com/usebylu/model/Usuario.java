@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
@@ -30,21 +31,24 @@ public class Usuario extends EntidadeBasica implements UserDetails {
     @Column(nullable = false, unique = true)
     private String cpf;
     private long telefone;
+    @Column(nullable = false, unique = true)
     private String email;
     @Embedded
     private Endereco endereco;
     private LocalDate dataIngresso;
+    private UsuarioRole role;
 
     public Usuario(){}
 
     public Usuario(Long id, String nome, String senha, String cpf,
-                   long telefone, String email, Endereco endereco, LocalDate dataIngresso){
+                   long telefone, String email, Endereco endereco, LocalDate dataIngresso, UsuarioRole role){
         this.id = id;
         this.senha = senha;
         this.telefone = telefone;
         this.email = email;
         this.endereco = endereco;
         this.dataIngresso = dataIngresso;
+        this.role = role;
     }
 
     public void setCpf(String cpf) {
@@ -79,7 +83,13 @@ public class Usuario extends EntidadeBasica implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+
+        if(this.role == UsuarioRole.ADMIN) {
+            return List.of(new SimpleGrantedAuthority("ADMINISTRADOR_ROLE"),
+                    new SimpleGrantedAuthority("USUARIO_ROLE"));
+        } else {
+            return List.of(new SimpleGrantedAuthority("USUARIO_ROLE"));
+        }
     }
 
     @Override
