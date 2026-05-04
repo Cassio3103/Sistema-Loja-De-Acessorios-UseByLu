@@ -27,7 +27,7 @@ public enum Estado {
     @JsonCreator
     public static Estado fromString(String valor) {
         if (valor == null) {
-            throw new IllegalArgumentException("Estado não pode ser nulo");
+            throw new EstadoInvalidoException("Estado não pode ser nulo");
         }
 
         valor = valor.trim();

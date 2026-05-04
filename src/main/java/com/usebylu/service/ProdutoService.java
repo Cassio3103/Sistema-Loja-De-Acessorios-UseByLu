@@ -1,7 +1,9 @@
 package com.usebylu.service;
 
+import com.usebylu.auxiliar.Categoria;
 import com.usebylu.dto.ProdutoRequestDTO;
 import com.usebylu.dto.ProdutoResponseDTO;
+import com.usebylu.exception.ProdutoInvalidoException;
 import com.usebylu.mapper.ProdutoMapper;
 import com.usebylu.model.Produto;
 import com.usebylu.repository.ProdutoRepository;
@@ -44,7 +46,16 @@ public class ProdutoService {
                 produto.getCategoria(),
                 produto.getEstoque(),
                 produto.getPrecoProduto()
-                );
+        );
+    }
+
+    public ProdutoResponseDTO alterarProduto(ProdutoRequestDTO produtoRequestDTO, Long produtoId) {
+        validarDadosProduto(produtoRequestDTO.getNomeProduto(),
+                            produtoRequestDTO.getPrecoProduto(),
+                            produtoRequestDTO.getCategoria());
+
+
+        return 
     }
 
 
@@ -52,5 +63,23 @@ public class ProdutoService {
         return produtoMapper.toResponseList(produtoRepository.findAll());
     }
 
+    //--------------------------------------------------------------------------------------------------------
+    // MÉTODOS AUXILIARES
+
+    public void validarDadosProduto(String nome, double preco, Categoria categoria){
+        if(nome.isBlank()){
+            throw new ProdutoInvalidoException("O produto não pode conter nome vazio!");
+        }
+
+        if(preco < 0.0){
+            throw new ProdutoInvalidoException("O produto não pode ter preço negativo!");
+        }
+
+        if(!categoria.equals(Categoria.PERFUME) && !categoria.equals(Categoria.JOIA)){
+            throw new ProdutoInvalidoException("Categoria de produto inválida!");
+        }
+    }
+
 
 }
+

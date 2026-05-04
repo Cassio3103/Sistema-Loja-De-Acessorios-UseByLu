@@ -27,6 +27,12 @@ public class UsuarioResponseDTO {
         this.role = role;
     }
 
+    public UsuarioResponseDTO(Long id, String nome, String email, LocalDate dataDeIngresso){
+        this.id = id;
+        this.nome = nome;
+        this.email = email;
+        this.dataDeIngresso = dataDeIngresso;
+    }
 
 
 }

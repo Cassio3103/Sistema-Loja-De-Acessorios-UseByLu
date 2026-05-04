@@ -40,4 +40,5 @@ public class AuthService{
         assert usuario != null;
         return new LoginResponseDTO(usuario.getId(), usuario.getEmail(), tokenService.generateToken(usuario));
     }
+
 }
