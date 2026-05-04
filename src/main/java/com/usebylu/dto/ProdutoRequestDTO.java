@@ -10,13 +10,11 @@ public class ProdutoRequestDTO {
 
     private String nomeProduto;
     private Categoria categoria;
-    private int estoque;
     private double precoProduto;
 
-    public ProdutoRequestDTO(String nomeProduto, Categoria categoria, int estoque, double precoProduto) {
+    public ProdutoRequestDTO(String nomeProduto, Categoria categoria, double precoProduto) {
         this.nomeProduto = nomeProduto;
         this.categoria = categoria;
-        this.estoque = estoque;
         this.precoProduto = precoProduto;
     }
 

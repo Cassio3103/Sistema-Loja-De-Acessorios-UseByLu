@@ -145,9 +145,9 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
         boolean naoMudou =
                 usuario.getNome().equals(usuarioRequestDTO.getNome())
                         &&
-                        usuario.getSenha().equals(usuarioRequestDTO.getSenha())
+                usuario.getSenha().equals(usuarioRequestDTO.getSenha())
                         &&
-                        usuario.getEmail().equals(usuarioRequestDTO.getEmail());
+                usuario.getEmail().equals(usuarioRequestDTO.getEmail());
         if(naoMudou){
             throw new NoChangeException("Não há mudanças para se atualizar!");
         }
