@@ -11,6 +11,7 @@ import com.usebylu.repository.ProdutoRepository;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
+import org.mapstruct.Mapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +26,7 @@ public class ProdutoService {
     private ProdutoRepository produtoRepository;
     private ProdutoMapper produtoMapper;
 
-    public ProdutoService(ProdutoRepository produtoRepository){
+    public ProdutoService(ProdutoRepository produtoRepository, ProdutoMapper produtoMapper){
         super();
         this.produtoRepository = produtoRepository;
         this.produtoMapper = produtoMapper;

@@ -18,13 +18,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthService{
 
-    @Autowired
-    UsuarioRepository usuarioRepository;
 
+    private final UsuarioRepository usuarioRepository;
     private final AuthenticationManager manager;
     private final TokenService tokenService;
 
-    public AuthService(AuthenticationManager manager, TokenService tokenService){
+    public AuthService(UsuarioRepository usuarioRepository, AuthenticationManager manager, TokenService tokenService){
+        this.usuarioRepository = usuarioRepository;
         this.manager = manager;
         this.tokenService = tokenService;
     }

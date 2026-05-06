@@ -2,8 +2,8 @@ package com.usebylu.model;
 
 public enum UsuarioRole {
 
-    CLIENTE("CLIENTE_ROLE"),
-    ADMIN("ADMINISTRADOR_ROLE");
+    CLIENTE("CLIENTE"),
+    ADMIN("ADMINISTRADOR");
 
     private final String nomeRole;
 

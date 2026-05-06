@@ -7,6 +7,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.jspecify.annotations.NonNull;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -23,14 +25,16 @@ public class SecurityFilter extends OncePerRequestFilter {
         this.tokenService = tokenService;
     }
 
-
-
     @Override
     protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull
                                     HttpServletResponse response, @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
         String token = extrairToken(request);
+        if (token != null) {
+            autenticarUsuario(token);
+        }
+        filterChain.doFilter(request, response);
     }
 
     private String extrairToken(HttpServletRequest request){
@@ -40,4 +44,21 @@ public class SecurityFilter extends OncePerRequestFilter {
         }
         return authHeader.substring(7);
     }
+
+    private void autenticarUsuario(String token) {
+        String email = tokenService.validateToken(token);
+        if (email != null) {
+            usuarioRepository.findByEmail(email).ifPresent(usuario -> {
+                UsernamePasswordAuthenticationToken authentication =
+                        new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            });
+        }
+    }
+
+
+
+
+
+
 }

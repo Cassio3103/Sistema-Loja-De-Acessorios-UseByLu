@@ -48,4 +48,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(threatResponse);
     }
 
+    @ExceptionHandler(TokenInvalidoException.class)
+    private ResponseEntity<RestErrorMessage> tokenInvalidoException(TokenInvalidoException exception){
+        RestErrorMessage threatResponse = new RestErrorMessage(HttpStatus.UNAUTHORIZED,
+                exception.getMessage());
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(threatResponse);
+    }
+
 }

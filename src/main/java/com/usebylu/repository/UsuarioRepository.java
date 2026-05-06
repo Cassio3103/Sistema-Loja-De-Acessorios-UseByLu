@@ -9,7 +9,7 @@ import java.util.Optional;
 @Repository
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    UserDetails findByLogin(String login);
+    //UserDetails findByLogin(String login);
 
     @Override
     boolean existsById(Long id);
