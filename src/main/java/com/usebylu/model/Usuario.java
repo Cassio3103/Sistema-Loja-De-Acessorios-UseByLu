@@ -41,13 +41,13 @@ public class Usuario extends EntidadeBasica implements UserDetails {
     public Usuario(){}
 
     public Usuario(Long id, String nome, String senha, String cpf,
-                   long telefone, String email, Endereco endereco, LocalDate dataIngresso, UsuarioRole role){
+                   long telefone, String email, Endereco endereco, LocalDate dataDeIngresso, UsuarioRole role){
         this.id = id;
         this.senha = senha;
         this.telefone = telefone;
         this.email = email;
         this.endereco = endereco;
-        this.dataIngresso = dataIngresso;
+        this.dataIngresso = dataDeIngresso;
         this.role = role;
     }
 
