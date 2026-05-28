@@ -24,7 +24,7 @@ public class UsuarioController {
                 .body(usuarioService.cadastrarUsuario(usuarioRequestDTO));
     }
 
-    @PutMapping("/atualizar/{id}")
+    @PutMapping("/atualizar/{usuario_id}")
     public ResponseEntity<UsuarioResponseDTO> atualizarUsuario(@PathVariable Long usuario_id, @RequestBody
                                                                UsuarioRequestDTO usuarioRequestDTO)
                                                                 throws AccessDeniedException {
@@ -33,7 +33,7 @@ public class UsuarioController {
                 .body(usuarioService.atualizarUsuario(usuario_id, usuarioRequestDTO));
     }
 
-    @GetMapping("/buscar/{id}")
+    @GetMapping("/buscar/{usuario_id}")
     public ResponseEntity<UsuarioResponseDTO> buscarUsuario(@PathVariable Long usuario_id)
                                                             throws AccessDeniedException {
         return ResponseEntity
@@ -41,7 +41,7 @@ public class UsuarioController {
                 .body(usuarioService.buscarUsuario(usuario_id));
     }
 
-    @DeleteMapping("/deletar/{id}")
+    @DeleteMapping("/deletar/{usuario_id}")
     public ResponseEntity<Void> deletarUsuario(@PathVariable Long usuario_id)
                                                                 throws AccessDeniedException{
         usuarioService.deletarUsuario(usuario_id);
@@ -50,7 +50,7 @@ public class UsuarioController {
                 .build();
     }
 
-    @GetMapping("/ativar/{id}")
+    @GetMapping("/ativar/{usuario_id}")
     public ResponseEntity<Void> ativarUsuario(@PathVariable Long usuario_id)
                                                                 throws AccessDeniedException {
         usuarioService.ativarUsuario(usuario_id);

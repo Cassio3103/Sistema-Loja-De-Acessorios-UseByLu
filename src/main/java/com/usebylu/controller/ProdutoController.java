@@ -23,7 +23,7 @@ public class ProdutoController {
                 .body(produtoService.adicionarProduto(produtoRequestDTO));
     }
 
-    @PutMapping("/alterar/{id}")
+    @PutMapping("/alterar/{produtoId}")
     public ResponseEntity<ProdutoResponseDTO> alterarProduto(@RequestBody ProdutoRequestDTO produtoRequestDTO,
                                                              @PathVariable Long produtoId){
         return ResponseEntity

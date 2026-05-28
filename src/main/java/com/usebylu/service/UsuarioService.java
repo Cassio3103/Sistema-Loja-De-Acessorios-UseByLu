@@ -12,6 +12,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.usebylu.repository.UsuarioRepository;
 
@@ -27,10 +28,12 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
     // INJEÇÃO DE DEPENDÊNCIAS -------------------------------------------------------------/
 
     private UsuarioRepository usuarioRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository){
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder){
         super(usuarioRepository);
         this.usuarioRepository = usuarioRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     // CREATE, READ, UPDATE, DELETE -------------------------------------------------------------/
@@ -42,8 +45,10 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
 
         Usuario usuario = new Usuario();
 
+
+
         usuario.setNome(dto.getNome());
-        usuario.setSenha(dto.getSenha());
+        usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
         usuario.setCpf(dto.getCpf());
         usuario.setTelefone(dto.getTelefone());
         usuario.setEmail(dto.getEmail());
@@ -76,7 +81,7 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
         }
 
         usuario.setNome(dto.getNome());
-        usuario.setSenha(dto.getSenha());
+        usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
         usuario.setEmail(dto.getEmail());
 
         usuarioRepository.save(usuario);
