@@ -1,5 +1,6 @@
 package com.usebylu.controller;
 
+import com.usebylu.dto.UsuarioPatchDTO;
 import com.usebylu.dto.UsuarioRequestDTO;
 import com.usebylu.dto.UsuarioResponseDTO;
 import com.usebylu.model.Usuario;
@@ -24,13 +25,13 @@ public class UsuarioController {
                 .body(usuarioService.cadastrarUsuario(usuarioRequestDTO));
     }
 
-    @PutMapping("/atualizar/{usuario_id}")
+    @PatchMapping("/atualizar/{usuario_id}")
     public ResponseEntity<UsuarioResponseDTO> atualizarUsuario(@PathVariable Long usuario_id, @RequestBody
-                                                               UsuarioRequestDTO usuarioRequestDTO)
+                                                                UsuarioPatchDTO usuarioPatchDTO)
                                                                 throws AccessDeniedException {
         return ResponseEntity
                 .ok()
-                .body(usuarioService.atualizarUsuario(usuario_id, usuarioRequestDTO));
+                .body(usuarioService.atualizarUsuario(usuario_id, usuarioPatchDTO));
     }
 
     @GetMapping("/buscar/{usuario_id}")

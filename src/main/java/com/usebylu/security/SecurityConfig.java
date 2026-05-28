@@ -37,6 +37,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/produto").hasRole("ADMINISTRADOR")
                         .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                         .requestMatchers(HttpMethod.POST,"/usuario/cadastrar").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/usuario/atualizar/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)

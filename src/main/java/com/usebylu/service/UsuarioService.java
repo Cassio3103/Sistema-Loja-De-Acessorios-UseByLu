@@ -1,5 +1,6 @@
 package com.usebylu.service;
 
+import com.usebylu.dto.UsuarioPatchDTO;
 import com.usebylu.dto.UsuarioRequestDTO;
 import com.usebylu.dto.UsuarioResponseDTO;
 import com.usebylu.exception.NoChangeException;
@@ -41,7 +42,7 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
     public UsuarioResponseDTO cadastrarUsuario(UsuarioRequestDTO dto){
 
         verificarSeExistePorEmail(dto);
-        verificarDataDeIngresso(dto);
+        //verificarDataDeIngresso(dto);
 
         Usuario usuario = new Usuario();
 
@@ -53,7 +54,7 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
         usuario.setTelefone(dto.getTelefone());
         usuario.setEmail(dto.getEmail());
         usuario.setEndereco(dto.getEndereco());
-        usuario.setDataIngresso(dto.getDataDeIngresso());
+        usuario.setDataIngresso(LocalDate.now());
 
         usuario = usuarioRepository.save(usuario);
 
@@ -65,7 +66,7 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
         );
     }
 
-    public UsuarioResponseDTO atualizarUsuario(Long id, UsuarioRequestDTO dto) throws AccessDeniedException {
+    public UsuarioResponseDTO atualizarUsuario(Long id, UsuarioPatchDTO dto) throws AccessDeniedException {
         Usuario usuario = usuarioRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontradp!"));
         Usuario usuarioLogado = getUsuarioLogado();
@@ -74,17 +75,36 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
 
         usuarioMudou(usuario, dto);
 
-        if(!Objects.equals(dto.getEmail(), usuario.getEmail())){
-            if(usuarioRepository.existsByEmail(dto.getEmail())){
+        if (dto.getEmail() != null &&
+                !dto.getEmail().equals(usuario.getEmail())) {
+
+            if (usuarioRepository.existsByEmail(dto.getEmail())) {
                 throw new RuntimeException("Email já usado!");
             }
         }
 
-        usuario.setNome(dto.getNome());
-        usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
-        usuario.setEmail(dto.getEmail());
+        if (dto.getNome() != null) {
+            usuario.setNome(dto.getNome());
+        }
 
-        usuarioRepository.save(usuario);
+        if (dto.getSenha() != null) {
+            usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
+        }
+
+        if (dto.getEmail() != null) {
+            usuario.setEmail(dto.getEmail());
+        }
+
+        if (dto.getTelefone() != null) {
+            usuario.setTelefone(dto.getTelefone());
+        }
+
+        if (dto.getEndereco() != null) {
+            usuario.setEndereco(dto.getEndereco());
+        }
+
+
+        usuario = usuarioRepository.save(usuario);
 
         return new UsuarioResponseDTO(
                 usuario.getId(),
@@ -146,14 +166,36 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
 
     // MÉTODOS AUXILIARES -------------------------------------------------------------/
 
-    public void usuarioMudou(@NonNull Usuario usuario, @NonNull UsuarioRequestDTO usuarioRequestDTO){
-        boolean naoMudou =
-                usuario.getNome().equals(usuarioRequestDTO.getNome())
-                        &&
-                usuario.getSenha().equals(usuarioRequestDTO.getSenha())
-                        &&
-                usuario.getEmail().equals(usuarioRequestDTO.getEmail());
-        if(naoMudou){
+    public void usuarioMudou(Usuario usuario, UsuarioPatchDTO dto) {
+
+        boolean houveMudanca = false;
+
+        if (dto.getNome() != null &&
+                !dto.getNome().equals(usuario.getNome())) {
+            houveMudanca = true;
+        }
+
+        if (dto.getEmail() != null &&
+                !dto.getEmail().equals(usuario.getEmail())) {
+            houveMudanca = true;
+        }
+
+        if (dto.getTelefone() != null &&
+                !dto.getTelefone().equals(usuario.getTelefone())) {
+            houveMudanca = true;
+        }
+
+        if (dto.getEndereco() != null &&
+                !dto.getEndereco().equals(usuario.getEndereco())) {
+            houveMudanca = true;
+        }
+
+        if (dto.getSenha() != null &&
+                !passwordEncoder.matches(dto.getSenha(), usuario.getSenha())) {
+            houveMudanca = true;
+        }
+
+        if (!houveMudanca) {
             throw new NoChangeException("Não há mudanças para se atualizar!");
         }
     }
@@ -164,13 +206,13 @@ public class UsuarioService extends UsuarioLogadoService implements UserDetailsS
         }
     }
 
-    public void verificarDataDeIngresso(@NonNull UsuarioRequestDTO dto){
-        if(dto.getDataDeIngresso() == null){
-            throw new IllegalArgumentException("Usuário com data de ingresso obrigatória!");
-        } else if(dto.getDataDeIngresso().isAfter(LocalDate.now())){
-            throw new IllegalArgumentException("Usuário com data de ingresso inválida!");
-        }
-    }
+//    public void verificarDataDeIngresso(@NonNull UsuarioRequestDTO dto){
+//        if(dto.getDataDeIngresso() == null){
+//            throw new IllegalArgumentException("Usuário com data de ingresso obrigatória!");
+//        } else if(dto.getDataDeIngresso().isAfter(LocalDate.now())){
+//            throw new IllegalArgumentException("Usuário com data de ingresso inválida!");
+//        }
+//    }
 
     public void reativarUsuarioPorId(Long usuario_id) throws AccessDeniedException {
         Usuario usuarioLogado = getUsuarioLogado();

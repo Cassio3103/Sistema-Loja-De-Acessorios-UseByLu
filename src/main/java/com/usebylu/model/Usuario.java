@@ -30,11 +30,12 @@ public class Usuario extends EntidadeBasica implements UserDetails {
     private String senha;
     @Column(nullable = false, unique = true)
     private String cpf;
-    private long telefone;
+    private Long telefone;
     @Column(nullable = false, unique = true)
     private String email;
     @Embedded
     private Endereco endereco;
+    @Column(nullable = false, updatable = false)
     private LocalDate dataIngresso;
     private UsuarioRole role;
 

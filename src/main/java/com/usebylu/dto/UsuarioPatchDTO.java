@@ -4,29 +4,23 @@ import com.usebylu.auxiliar.Endereco;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
-
 @Getter
 @Setter
-public class UsuarioRequestDTO {
+public class UsuarioPatchDTO {
 
     private String nome;
     private String senha;
-    private String cpf;
     private Long telefone;
     private String email;
     private Endereco endereco;
 
-    public UsuarioRequestDTO(){}
+    public UsuarioPatchDTO(){}
 
-    public UsuarioRequestDTO(String nome, String senha, String cpf, Long telefone, String email,
-                             Endereco endereco){
+    public UsuarioPatchDTO(String nome, String senha, Long telefone, String email, Endereco endereco) {
         this.nome = nome;
         this.senha = senha;
-        this.cpf = cpf;
         this.telefone = telefone;
         this.email = email;
         this.endereco = endereco;
     }
-
 }
